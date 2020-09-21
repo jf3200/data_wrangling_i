@@ -11,7 +11,7 @@ library(tidyverse)
 
 Load the PULSE data
 
-```{r}
+```{r read_data}
 pulse_data = 
   haven::read_sas("./data/public_pulse_data.sas7bdat") %>% 
   janitor::clean_names()
@@ -19,7 +19,7 @@ pulse_data =
 
 Wide format to long format 
 
-```{r}
+```{r pivot_l}
 pulse_data_tidy = 
   pulse_data %>% 
   pivot_longer(
@@ -31,7 +31,7 @@ pulse_data_tidy =
 ```
 
 Re-write, combine and extend (to add a mutate)
-```{r}
+```{r pivot_l_one_step}
 pulse_data = 
   haven::read_sas("./data/public_pulse_data.sas7bdat") %>% 
   janitor::clean_names() %>% 
@@ -51,7 +51,7 @@ pulse_data =
 
 Make up some data! 
 
-```{r}
+```{r pivot_w}
 analysis_result = 
   tibble(
   group = c("treatment", "treatment", "placebo", "placebo"),
@@ -65,5 +65,39 @@ analysis_result %>%
     values_from = "mean"
   )
 
+```
+
+## `bind_rows`
+
+Read in sub-tables 
+
+```{r read_in_movies}
+fellowship_ring = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>% 
+  mutate(movie = "fellowship_ring")
+
+two_towers = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>% 
+  mutate(movie = "two_towers")
+
+return_king = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>% 
+  mutate(movie = "return_king")
+
+```
+
+Bind all the rows together
+
+```{r bind_movies}
+lotr_tidy = 
+  bind_rows(fellowship_ring, two_towers, return_king) %>% 
+  janitor::clean_names() %>% 
+  relocate(movie) %>% 
+  pivot_longer(
+    female:male, 
+    names_to = "gender", 
+    values_to = "words"
+  ) %>% 
+  mutate(race = str_to_lower(race))
 ```
 
