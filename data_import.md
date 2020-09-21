@@ -16,6 +16,11 @@ library(tidyverse)
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
+``` r
+library(readxl)
+library(haven)
+```
+
 ## Read in some data
 
 Read in the litters datasets.
@@ -165,3 +170,18 @@ litters_df = read_csv("./data/FAS_litters.csv", na = c("", "NA", "999"))
     ##   `Pups dead @ birth` = col_double(),
     ##   `Pups survive` = col_double()
     ## )
+
+## Other file formats
+
+Read in an excel file
+
+``` r
+mlb_df = read_excel("./data/mlb11.xlsx")
+mlb_df = read_excel("./data/mlb11.xlsx", range = "A1:F7")
+```
+
+Read in a SAS file
+
+``` r
+pulse_df = read_sas("./data/public_pulse_data.sas7bdat")
+```
